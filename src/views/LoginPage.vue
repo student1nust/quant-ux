@@ -13,8 +13,8 @@
                             <div class="MatcLoginPageSection" >
                                 <div class="MatcLoginPageForm">
                                     <div class=" form-group">
-                                        <label class="">Email</label>
-                                        <input class=" form-control" placeholder="Your email" type="text" v-model="email">
+                                        <label class="">Username</label>
+                                        <input class=" form-control" placeholder="Your Username" type="text" v-model="Username">
                                     </div>
 
                                     <div class=" form-group has-feedback">
@@ -39,8 +39,8 @@
                             <div class="MatcLoginPageSection">
                                 <div class="MatcLoginPageForm">
                                     <div class=" form-group">
-                                        <label class="">Email</label>
-                                        <input class=" form-control" placeholder="Your email" type="text" v-model="email">
+                                        <label class="">Username</label>
+                                        <input class=" form-control" placeholder="Your Username" type="text" v-model="Username">
                                     </div>
 
                                     <div class=" form-group has-feedback">
@@ -67,8 +67,8 @@
                               <div class="MatcLoginPageSection" v-if="resetToken">
                                 <div class="MatcLoginPageForm">
                                     <div class=" form-group">
-                                        <label class="">Email</label>
-                                        <input class=" form-control" placeholder="Your email" type="text" v-model="email">
+                                        <label class="">Username</label>
+                                        <input class=" form-control" placeholder="Your Username" type="text" v-model="Username">
                                     </div>
 
                                     <div class=" form-group has-feedback">
@@ -119,7 +119,7 @@ export default {
     return {
         hasLoginError: false,
         resetToken: false,
-        email: '',
+        Username: '',
         password: '',
         tos: false,
         errorMessage: ' ',
@@ -137,7 +137,7 @@ export default {
   },
   watch: {
     'user' (v) {
-      this.logger.log(6, 'watch', 'user >> ' + v.email)
+      this.logger.log(6, 'watch', 'user >> ' + v.Username)
       this.user = v
     }
   },
@@ -150,10 +150,10 @@ export default {
         this.errorMessage = ' '
       },
       async resetPassword () {
-        this.logger.info('resetPassword', 'enter ', this.email)
+        this.logger.info('resetPassword', 'enter ', this.Username)
 
-        if (this.email.length < 2) {
-            this.errorMessage = "Please enter your email"
+        if (this.Username.length < 2) {
+            this.errorMessage = "Please enter your Username"
             return;
         }
 
@@ -167,7 +167,7 @@ export default {
             return;
         }
 
-        let result = await Services.getUserService().reset2(this.email, this.password, this.resetToken)
+        let result = await Services.getUserService().reset2(this.Username, this.password, this.resetToken)
         if (result.type === 'error') {
             this.errorMessage = 'Someything is wrong'
         } else {
@@ -179,14 +179,14 @@ export default {
  
       },
       async requestPasswordReset () {
-        this.logger.info('requestPasswordReset', 'enter ', this.email)
-        await Services.getUserService().reset(this.email)
+        this.logger.info('requestPasswordReset', 'enter ', this.Username)
+        await Services.getUserService().reset(this.Username)
         this.errorMessage = 'Check you mail.'
       },
       async login () {
-        this.logger.info('login', 'enter ', this.email)
+        this.logger.info('login', 'enter ', this.Username)
         var result = await Services.getUserService().login({
-            email:this.email,
+            Username:this.Username,
             password: this.password
         })
         if (result.type == "error") {
@@ -200,7 +200,7 @@ export default {
         }
       },
       async signup() {
-        this.logger.info('signup', 'enter ', this.email)
+        this.logger.info('signup', 'enter ', this.Username)
 
         if (this.password.length < 6) {
             this.errorMessage = "Password too short"
@@ -213,7 +213,7 @@ export default {
         }
 
         var result = await Services.getUserService().signup({
-            email:this.email,
+            Username:this.Username,
             password: this.password,
             tos: this.tos
         })
@@ -222,19 +222,19 @@ export default {
                 this.errorMessage = "Not the correct domain"
             } else if (result.errors.indexOf("user.create.nosignup") >=0 ) {
                 this.errorMessage = "No sign-ups allowed."
-            } else if (result.errors.indexOf("user.email.not.unique") >= 0) {
-                this.errorMessage = "Email is taken"
+            } else if (result.errors.indexOf("user.Username.not.unique") >= 0) {
+                this.errorMessage = "Username is taken"
             } else {
                 this.errorMessage = "Password too short"
             }
         } else {
             let user = await Services.getUserService().login({
-                email:this.email,
+                Username:this.Username,
                 password: this.password,
             })
             this.$emit('login', user);
             this.$root.$emit('UserLogin', user)
-            this.logger.log(-1,'signup', 'exit with login', this.email)
+            this.logger.log(-1,'signup', 'exit with login', this.Username)
         }
       },
       initKeyCloak (conf) {
